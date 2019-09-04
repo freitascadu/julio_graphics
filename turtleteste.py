@@ -7,15 +7,17 @@ w.pack()
 
 
 def ponto (x, y, esp, cor):
+    #cálculo para arrumar os eixos e centralizar a origem
     x = x + (wid/2)
     y = -y + (hei/2)
+    #desenho do ponto
     x1 = x - (esp/2)
     y1 = y + (esp/2)
     x2 = x + (esp/2)
     y2 = y - (esp/2)
-    w.create_oval(x1,y1,x2,y2,fill=cor)
+    w.create_oval(x1,y1,x2,y2,fill=cor,outline=cor)
     
-
+#coefieciente angular da reta
 def calculaM(x1, x2, y1, y2):
     if ((x2-x1) == 0):
         m = 0
@@ -23,14 +25,14 @@ def calculaM(x1, x2, y1, y2):
         m = (y2-y1)/(x2-x1)
     return m
 
-
+#coefieciente linear da reta
 def calculaB(x1, x2, y1,y2):
     m = calculaM(x1, x2, y1, y2)
     b = y2 - (m * x2)
     return b
 
-
-def eqReta (x1,y1, x2,y2, esp, cor):
+#cálculo da equação da reta e desenho da reta através de cada ponto da reta
+def retaGraf (x1,y1, x2,y2, esp, cor):
     m = calculaM(x1, x2, y1, y2)
     b = calculaB(x1,x2, y1,y2)
     print("y - ",y1," = ",m," * x - ",x1)
@@ -87,25 +89,39 @@ def eqReta (x1,y1, x2,y2, esp, cor):
             x = x1
             for x in range(x1,x2):
                 ponto(x, (b+(m*x)), esp, cor) 
-            
-    
-    
-#ponto(10,10,5, "red")
 
-#ponto(0,0, 50, "blue")
+def fractal():
+    retaGraf(0,0,0,150,2,"red")
+    retaGraf(0,0,0,-150,2,"red")
+    retaGraf(0,-150,-150,-75,2,"red")
+    retaGraf(-150,-75,-150,75,2,"red")
+    retaGraf(-150,75,0,150,2,"red")
+    retaGraf(0,150,150,75,2,"red")
+    retaGraf(150,75,150,-75,2,"red")
+    retaGraf(150,-75,0,-150,2,"red")
+    retaGraf(150,75,-150,-75,2,"red")
+    retaGraf(-150,75,150,-75,2,"red")
+    retaGraf(150,-75,0,150,2,"red")
+    retaGraf(0,150,-150,-75,2,"red")
+    retaGraf(-150,-75,150,75,2,"red")
+    retaGraf(150,75,-150,75,2,"red")
+    retaGraf(-150,-75,150,-75,2,"red")
+    retaGraf(-150,75,0,-150,2,"red")
+    retaGraf(0,-150,150,75,2,"red")
+    retaGraf(50,-75,-50,75,2,"red")
+    retaGraf(-50,-75,50,75,2,"red")
+    ponto(0,150,5,"blue")
+    ponto(-150,75,5,"blue")
+    ponto(-50,75,5,"blue")
+    ponto(50,75,5,"blue")
+    ponto(150,75,5,"blue")
+    ponto(-100,0,5,"blue")
+    ponto(100,0,5,"blue")
+    ponto(-150,-75,5,"blue")
+    ponto(-50,-75,5,"blue")
+    ponto(50,-75,5,"blue")
+    ponto(150,-75,5,"blue")
+    ponto(0,-150,5,"blue")
 
-#reta(10,10,100,100, 5, "red")
-
-
-eqReta(10,10,100,10, 5, "black")
-eqReta(100,10,100,100, 5, "black")
-eqReta(100,100,10,100, 5, "black")
-eqReta(10,100,10,10, 5, "black")
-eqReta(10,10,100,100,5, "black")
-eqReta(10,100,100,10,5, "black")
-eqReta(10,100,55,155,5, "black")
-eqReta(55,155,100,100,5, "black")
-eqReta(55,10, 55, 155, 5, "black")
-
+fractal()
 #w.mainloop()
-#eqReta(20, 30, 10,50,5, "red")
