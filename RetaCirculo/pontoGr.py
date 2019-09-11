@@ -23,18 +23,18 @@ class PontoGr(Ponto):
         return self.__esp
 
 
-    def origem(self, ponto, wid=1000, hei=1000):
-        self._Ponto__x = ponto.x + (wid / 2)
-        self._Ponto__y = ponto.y + (hei / 2)
+    def origem(self, wid=1000, hei=1000):
+        self._Ponto__x = self._Ponto__x + (wid / 2)
+        self._Ponto__y = self._Ponto__y + (hei / 2)
 
 
-    def desenhaPonto(self, ponto, jan):
-        self.origem(ponto)
-        x1 = ponto.x - (ponto.esp / 2)
-        y1 = ponto.y + (ponto.esp / 2)
-        x2 = ponto.x + (ponto.esp / 2)
-        y2 = ponto.y - (ponto.esp / 2)
-        jan.create_oval(x1, y1, x2, y2, fill = ponto.cor, outline = ponto.cor)
+    def desenhaPonto(self, jan):
+        self.origem()
+        x1 = self._Ponto__x - (self.__esp / 2)
+        y1 = self._Ponto__y + (self.__esp / 2)
+        x2 = self._Ponto__x + (self.__esp / 2)
+        y2 = self._Ponto__y - (self.__esp / 2)
+        jan.create_oval(x1, y1, x2, y2, fill = self.__cor, outline = self.__cor)
 
 
 t = Tk()
