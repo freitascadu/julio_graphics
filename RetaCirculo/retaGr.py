@@ -72,7 +72,7 @@ class RetaGr(Reta, PontoGr):
                     ponto = PontoGr(self.p1.x, self.p1.y, reta.cor, reta.esp)
                     ponto.desenhaPonto(ponto, jan)
                     for x in range(reta.y1,reta.y2,-1):
-                        if (reta.x == reta.y1):
+                        if (x == reta.y1):
                             ponto = PontoGr(self.p1.x, b, reta.cor, reta.esp)
                             ponto.desenhaPonto(ponto, jan)
                         else:
@@ -93,6 +93,9 @@ class RetaGr(Reta, PontoGr):
                     ponto = PontoGr(x, int(b+(m*x)), reta.cor, reta.esp)
                     ponto.desenhaPonto(ponto, jan)
 
-r = RetaGr(10,10,10,100,'black',2)
-
-r.desenhaReta(r, w)
+r1 = RetaGr(0, 0,0,150,'red',2)
+r2 = RetaGr(0, 0,0,-150,'red',2)
+r3 = RetaGr(10,10,100,100,'blue',2)
+r1.desenhaReta(r1, w)
+r2.desenhaReta(r2, w)
+r3.desenhaReta(r3, w)
