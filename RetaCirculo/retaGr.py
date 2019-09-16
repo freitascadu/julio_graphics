@@ -13,17 +13,14 @@ class RetaGr(Reta, PontoGr):
         self.__cor = cor
         self.__esp = esp
 
-
     @property
     def cor(self):
         return self.__cor
 
-
     @property
     def esp(self):
         return self.__esp
-
-
+    
     def desenhaReta(self, jan):
         b = self.calculaB()
         m = self.calculaM()
@@ -93,9 +90,11 @@ class RetaGr(Reta, PontoGr):
                     ponto = PontoGr(x, int(b+(m*x)), self.__cor, self.__esp)
                     ponto.desenhaPonto(jan)
 
-r1 = RetaGr(0, 0,0,150,'red',2)
-r2 = RetaGr(0, 0,0,-150,'red',2)
-r3 = RetaGr(10,10,100,100,'blue',2)
-r1.desenhaReta(w)
-r2.desenhaReta(w)
-r3.desenhaReta(w)
+if (__name__ == '__main__'):
+    r1 = RetaGr(0, 0,0,150,'red',2)
+    r2 = RetaGr(0, 0,0,-150,'red',2)
+    r3 = RetaGr(10,10,100,100,'blue',2)
+    print(r3.__dict__)
+    r1.desenhaReta(w)
+    r2.desenhaReta(w)
+    r3.desenhaReta(w)

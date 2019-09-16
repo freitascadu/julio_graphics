@@ -42,6 +42,6 @@ wid = 1000
 hei = 1000
 w = Canvas(t, width=wid, height=hei)
 w.pack()
-
+print(f'EU SOU O {__name__}') 
 
 

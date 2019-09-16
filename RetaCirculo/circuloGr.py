@@ -85,10 +85,10 @@ class CirculoGr(Circulo, PontoGr):
         ponto = PontoGr(self._Circulo__centro.x - x, self._Circulo__centro.y + y, self.__cor, self.__esp)
         ponto.desenhaPonto(jan)
 
-        
-"""        
-c = CirculoGr(0,0,200)
-ci = CirculoGr(0,0,100)
-ci.desenhaCirculoMidPoint(w)
-c.desenhaCirculo(w)
-"""
+if __name__ == '__main__':       
+    c = CirculoGr(0,0,200)
+    ci = CirculoGr(0,0,100)
+    
+    ci.desenhaCirculoMidPoint(w)
+    c.desenhaCirculo(w)
+
