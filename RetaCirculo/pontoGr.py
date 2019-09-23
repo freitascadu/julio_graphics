@@ -36,12 +36,15 @@ class PontoGr(Ponto):
         y2 = self._Ponto__y - (self.__esp / 2)
         jan.create_oval(x1, y1, x2, y2, fill = self.__cor, outline = self.__cor)
 
-
-t = Tk()
-wid = 1000
-hei = 1000
-w = Canvas(t, width=wid, height=hei)
-w.pack()
-print(f'EU SOU O {__name__}') 
+if(__name__=="__main__"):
+    t = Tk()
+    wid = 1000
+    hei = 1000
+    w = Canvas(t, width=wid, height=hei)
+    p1 = PontoGr(10,10, 'red', 20)
+    p1.origem(0,0)
+    p1.desenhaPonto(w)
+    w.pack()
+    print(f'EU SOU O {__name__}') 
 
 
