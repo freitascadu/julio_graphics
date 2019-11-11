@@ -208,12 +208,12 @@ def cliqueDesenho(event):
       global pilhaGeo
       if(len(pilhaGeo)==0):
          ponto = PontoGr(event.x,event.y, COR_SELETA, ESPESSURA_SELETA)
-         ponto.origem(-1000, -1000)
+         ponto.origem(0, 0)
          pilhaGeo.append(ponto)
          msg.config(text=str_status+f'Guardei um ponto da reta! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
       else:
          ponto = PontoGr(event.x,event.y, COR_SELETA, ESPESSURA_SELETA)
-         ponto.origem(-1000, -1000)
+         ponto.origem(0, 0)
          pilhaGeo.append(ponto)
          pA = pilhaGeo.pop()
          pB = pilhaGeo.pop()
@@ -221,12 +221,12 @@ def cliqueDesenho(event):
          pD = pB
          
          reta = RetaGr(int(pA.x), int(pA.y), int(pB.x), int(pB.y), COR_SELETA, ESPESSURA_SELETA)
-         reta.desenhaReta(desenhoQuadro)
+         reta.desenhaLine(desenhoQuadro)
 
          #pq nao desenha no mapa?
          print(f'pC.x:{pC.x} pC.y:{pC.y}')
          reta2 = RetaGr(int(pC.x/3), int(pC.y/3), int(pD.x/3), int(pD.y/3), COR_SELETA, ESPESSURA_SELETA/3)
-         reta2.desenhaReta(desenhoMapa)
+         reta2.desenhaLine(desenhoMapa)
          
          msg.config(text=str_status+f'Desenhei uma reta! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
          

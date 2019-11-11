@@ -20,6 +20,9 @@ class RetaGr(Reta, PontoGr):
     @property
     def esp(self):
         return self.__esp
+
+    def desenhaLine(self, jan):
+        jan.create_line(self._Reta__x1, self._Reta__y1, self._Reta__x2, self._Reta__y2, fill = self.__cor, width = self.__esp)
     
     def desenhaReta(self, jan):
         b = self.calculaB()
@@ -95,6 +98,8 @@ if (__name__ == '__main__'):
     r2 = RetaGr(0, 0,0,-150,'red',2)
     r3 = RetaGr(10,10,100,100,'blue',2)
     print(r3.__dict__)
+    '''
     r1.desenhaReta(w)
     r2.desenhaReta(w)
     r3.desenhaReta(w)
+    '''
