@@ -5,6 +5,8 @@ from time import *
 from pontoGr import *
 from retaGr import *
 from circulo import *
+from circuloGr import *
+from math import *
 
 STD_ALTURA = 720
 STD_LARGURA = 1280
@@ -25,7 +27,7 @@ BOTAO_BD = 5
 COR_BORDA = "#000000"
 SIZE_BORDA = 3
 
-COR_SELETA = "red"
+COR_SELETA = "#ff0000"
 COR_QUADRO = "#ffffff"
 
 ESPESSURA_SELETA = 2
@@ -35,8 +37,6 @@ ESPESSURA_MIN = 2
 ferramenta = "Mão"
 
 pilhaGeo = []
-raioCirculo = None
-
 
 root = Tk()
 root.config(width=STD_LARGURA, height=STD_ALTURA)
@@ -183,6 +183,7 @@ desenhoMapa.pack(side=TOP)
 def cliqueDesenho(event):
    global desenhoQuadro
    global desenhoMapa
+   global pilhaGeo
    infoStatus.config(bitmap="warning")
    str_status = f'Ferramenta {ferramenta}: Clique em {event.x},{event.y} do Desenho. '
    msg.config(text=str_status)
@@ -205,7 +206,7 @@ def cliqueDesenho(event):
    elif(ferramenta=="Reta"):
       #se a pilha ta vazia adiciona
       #se a pilha ja tem um ponto, adiciona outro e plota a reta
-      global pilhaGeo
+      
       if(len(pilhaGeo)==0):
          ponto = PontoGr(event.x,event.y, COR_SELETA, ESPESSURA_SELETA)
          ponto.origem(0, 0)
@@ -231,7 +232,20 @@ def cliqueDesenho(event):
          msg.config(text=str_status+f'Desenhei uma reta! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
          
    elif(ferramenta=="Círculo"):
-      pass
+      #global pilhaGeo
+      if(len(pilhaGeo)==0):
+         pilhaGeo.append((event.x,event.y))
+         msg.config(text=str_status+f'Guardei o centro! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
+      else:
+         raioP = (event.x,event.y)
+         centro = pilhaGeo.pop()
+         raio = sqrt((raioP[0]-centro[0])*(raioP[0]-centro[0])+(raioP[1]-centro[1])*(raioP[1]-centro[1]))
+         circulo = CirculoGr( centro[0], centro[1], raio, COR_SELETA, ESPESSURA_SELETA)
+         circulo.desenhaCirculoMidPoint(desenhoQuadro)
+         circulinho = CirculoGr( centro[0]/3, centro[1]/3, raio/3, COR_SELETA, ESPESSURA_SELETA/3)
+         circulinho.desenhaCirculoMidPoint(desenhoMapa)
+         msg.config(text=str_status+f'Desenhei Circulo! raio: {round(raio)} e centro: {centro[0]},{centro[1]}')
+         
    elif(ferramenta=="Letra"):
       pass
    elif(ferramenta=="Pencil"):
@@ -269,8 +283,7 @@ def mudouTam(event):
 #QUADRO
 #declarado antes
 desenhoQuadro.bind("<Button-1>", cliqueDesenho)
-desenhoQuadro.bind("<Enter>", hoverMapa)
-desenhoQuadro.bind("<Leave>", hoverMapa)
+desenhoQuadro.bind("<Motion>", hoverMapa)
 desenhoQuadro.bind("<Configure>", mudouTam)
 
 #MAPA
@@ -339,38 +352,12 @@ def reta():
    desenhoQuadro.config(cursor="circle")
    
 def circulo():
-   #aproveita pra pedir o raio aqui
    global ferramenta
-   global raioCirculo
-   global ferramentasBorda
    ferramenta = "Círculo"
    for f in ferram:
       if(f!='circulo'):ferram[f].config(state=ACTIVE, relief=RAISED)
    ferram['circulo'].config(state=DISABLED, relief=SUNKEN)
    desenhoQuadro.config(cursor="circle")
-   ferramentasBorda.config(height=SIZE_FERR+35)
-   raioEscolhe = Spinbox(
-   ferrEsq,
-   from_=2,
-   to=1000,
-   activebackground=BOTAO_BG,
-   disabledbackground=BOTAO_BG,
-   disabledforeground=BOTAO_FG,
-   bg=BOTAO_BG,
-   fg=BOTAO_FG,
-   width=4,
-   command=escolheRaio
-   )
-   raioEscolhe.grid(row=1, column=4)
-def configRaio():
-
-   #nao da pra fazer sem orientacao a objeto PepeHands
-   #mas eh: cria um spinbox e coloca ele embaixo do icone do circulo
-   #config aumenta o tam da barra
-   #joga ele no .grid(row=1, column=4)
-   global raioCirculo
-   raioCirculo = raioEscolhe.get()
-
 def letra():
    global ferramenta
    ferramenta = "Letra"
@@ -427,9 +414,6 @@ ferram['lapis'].grid(row=0, column=6)
 ferram['spray'].grid(row=0, column=7)
 
 
-
-
-
 #BARRA DE PARAMETROS DE FERRAMENTAS (cor e espessura) - DIR
 
 
@@ -450,7 +434,6 @@ espConfig = Spinbox(
    fg=BOTAO_FG,
    width=2
    )
-
 corConfig.pack(side=RIGHT, fill=BOTH, expand=True)
 espConfig.pack(side=RIGHT, fill=BOTH, expand=True)
 espConfigLabel.pack(side=RIGHT, fill=BOTH, expand=True)
@@ -458,7 +441,9 @@ espConfigLabel.pack(side=RIGHT, fill=BOTH, expand=True)
 #funcoes
 def escolheCor(event):
    global COR_SELETA
-   (tuplaCor, COR_SELETA) = askcolor(COR_SELETA)
+   protegeCor = COR_SELETA
+   (tuplaCor, protegeCor) = askcolor(COR_SELETA)
+   if(protegeCor != None): COR_SELETA = protegeCor
    corConfig.config(background=COR_SELETA)
    bmCorConfig.config(background=COR_SELETA)
 corConfig.bind("<Button-1>",escolheCor)

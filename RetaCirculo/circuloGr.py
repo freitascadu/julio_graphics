@@ -68,27 +68,43 @@ class CirculoGr(Circulo, PontoGr):
 
 
     def desenharPontosMP(self, x, y, jan):
+        escX = -1000
+        escY = -1000
         ponto = PontoGr(self._Circulo__centro.x + x, self._Circulo__centro.y + y, self.__cor, self.__esp)
+        ponto.origem(escX, escY)
         ponto.desenhaPonto(jan)
         ponto = PontoGr(self._Circulo__centro.x + y, self._Circulo__centro.y + x, self.__cor, self.__esp)
+        ponto.origem(escX, escY)
         ponto.desenhaPonto(jan)
         ponto = PontoGr(self._Circulo__centro.x + y, self._Circulo__centro.y - x, self.__cor, self.__esp)
+        ponto.origem(escX, escY)
         ponto.desenhaPonto(jan)
         ponto = PontoGr(self._Circulo__centro.x + x, self._Circulo__centro.y - y, self.__cor, self.__esp)
+        ponto.origem(escX, escY)
         ponto.desenhaPonto(jan)
         ponto = PontoGr(self._Circulo__centro.x - x, self._Circulo__centro.y - y, self.__cor, self.__esp)
+        ponto.origem(escX, escY)
         ponto.desenhaPonto(jan)
         ponto = PontoGr(self._Circulo__centro.x - y, self._Circulo__centro.y - x, self.__cor, self.__esp)
+        ponto.origem(escX, escY)
         ponto.desenhaPonto(jan)
         ponto = PontoGr(self._Circulo__centro.x - y, self._Circulo__centro.y + x, self.__cor, self.__esp)
+        ponto.origem(escX, escY)
         ponto.desenhaPonto(jan)
         ponto = PontoGr(self._Circulo__centro.x - x, self._Circulo__centro.y + y, self.__cor, self.__esp)
+        ponto.origem(escX, escY)
         ponto.desenhaPonto(jan)
 
-if __name__ == '__main__':       
-    c = CirculoGr(0,0,200)
+if __name__ == '__main__':
+    root = Tk()
+    root.geometry('640x480+50+50')
+    root.config()
+    f = Frame(root, bg='black')
+    w = Canvas(f)
+    #c = CirculoGr(0,0,200)
     ci = CirculoGr(0,0,100)
-    
+    f.pack(fill=BOTH, expand=True)
+    w.pack(fill=BOTH, expand=True)
     ci.desenhaCirculoMidPoint(w)
-    c.desenhaCirculo(w)
+    #c.desenhaCirculo(w)
 
