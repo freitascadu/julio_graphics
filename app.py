@@ -39,7 +39,9 @@ ESPESSURA_MIN = 2
 ferramenta = "Mão"
 
 pilhaGeo = []
-historico = []
+historicoMapa = []
+historicoQuadro = []
+historicoXML = []
 
 root = Tk()
 root.config(width=STD_LARGURA, height=STD_ALTURA)
@@ -133,6 +135,9 @@ def cliqueDesenho(event):
    global desenhoQuadro
    global desenhoMapa
    global pilhaGeo
+   global historicoQuadro
+   global historicoMapa
+   global historicoXML
    infoStatus.config(bitmap="warning")
    str_status = f'Ferramenta {ferramenta}: Clique em {event.x},{event.y} do Desenho. '
    msg.config(text=str_status)
@@ -145,18 +150,19 @@ def cliqueDesenho(event):
       ponto1 = PontoGr(event.x,event.y, COR_SELETA, ESPESSURA_SELETA)
       ponto1.origem(-1000, -1000)
       ponto1.desenhaPonto(desenhoQuadro)
-
+      historicoQuadro.append(ponto1)
       #temporario, pq tem que re-escalar o canvas, e nao desenhar duas vezes
       #a escala hard 3 ta errada, a usada no programa eh 4 mas nao ta calibrada tb
       ponto2 = PontoGr(event.x/3, event.y/3, COR_SELETA, ESPESSURA_SELETA/3)
       ponto2.origem(-1000, -1000)
       ponto2.desenhaPonto(desenhoMapa)
+      historicoMapa.append(ponto2)
       xn = event.x/desenhoQuadro.winfo_width()
       yn = event.y/desenhoQuadro.winfo_height()
       red =   int(f'{COR_SELETA[1]}{COR_SELETA[2]}',16)
       green = int(f'{COR_SELETA[3]}{COR_SELETA[4]}',16)
       blue =  int(f'{COR_SELETA[5]}{COR_SELETA[6]}',16)
-      historico.append(f'<Ponto><x>{xn}</x><y>{yn}</y><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura></Ponto>')
+      historicoXML.append(f'<Ponto><x>{xn}</x><y>{yn}</y><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura></Ponto>')
       msg.config(text=str_status+f'Desenhei um ponto! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
    elif(ferramenta=="Reta"):
       #se a pilha ta vazia adiciona
@@ -180,7 +186,8 @@ def cliqueDesenho(event):
          #pq nao desenha no mapa?
          reta2 = RetaGr(int(pC.x/3), int(pC.y/3), int(pD.x/3), int(pD.y/3), COR_SELETA, ESPESSURA_SELETA/3)
          reta2.desenhaLine(desenhoMapa)
-         
+         historicoQuadro.append(reta)
+         historicoMapa.append(reta2)
          xn = pA.x/desenhoQuadro.winfo_width()
          yn = pA.y/desenhoQuadro.winfo_height()
          xn2= pB.x/desenhoQuadro.winfo_width()
@@ -188,7 +195,7 @@ def cliqueDesenho(event):
          red =   int(f'{COR_SELETA[1]}{COR_SELETA[2]}',16)
          green = int(f'{COR_SELETA[3]}{COR_SELETA[4]}',16)
          blue =  int(f'{COR_SELETA[5]}{COR_SELETA[6]}',16)
-         historico.append(f'<Reta><Ponto><x>{xn}</x><y>{yn}</y></Ponto><Ponto><x>{xn2}</x><y>{yn2}</y></Ponto><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura></Reta>')
+         historicoXML.append(f'<Reta><Ponto><x>{xn}</x><y>{yn}</y></Ponto><Ponto><x>{xn2}</x><y>{yn2}</y></Ponto><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura></Reta>')
          
          msg.config(text=str_status+f'Desenhei uma reta! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
          
@@ -205,6 +212,8 @@ def cliqueDesenho(event):
          circulo.desenhaCirculoMidPoint(desenhoQuadro)
          circulinho = CirculoGr( centro[0]/3, centro[1]/3, raio/3, COR_SELETA, ESPESSURA_SELETA/3)
          circulinho.desenhaCirculoMidPoint(desenhoMapa)
+         historicoQuadro.append(circulo)
+         historicoMapa.append(circulinho)
 
          xn = centro[0]/desenhoQuadro.winfo_width()
          yn = centro[1]/desenhoQuadro.winfo_height()
@@ -213,7 +222,7 @@ def cliqueDesenho(event):
          green = int(f'{COR_SELETA[3]}{COR_SELETA[4]}',16)
          blue =  int(f'{COR_SELETA[5]}{COR_SELETA[6]}',16)
          
-         historico.append(f'<Circulo><Ponto><x>{xn}</x><y>{yn}</y></Ponto><Raio>{raio}</Raio><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura></Circulo>')
+         historicoXML.append(f'<Circulo><Ponto><x>{xn}</x><y>{yn}</y></Ponto><Raio>{raio}</Raio><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura></Circulo>')
 
          msg.config(text=str_status+f'Desenhei Circulo! raio: {round(raio)} e centro: {centro[0]},{centro[1]}')
          
@@ -281,7 +290,9 @@ def riscoDesenho(event):
       red =   int(f'{COR_SELETA[1]}{COR_SELETA[2]}',16)
       green = int(f'{COR_SELETA[3]}{COR_SELETA[4]}',16)
       blue =  int(f'{COR_SELETA[5]}{COR_SELETA[6]}',16)
-      historico.append(f'<Ponto><x>{xn}</x><y>{yn}</y><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura></Ponto>')
+      historicoQuadro.append(ponto1)
+      historicoMapa.append(ponto2)
+      historicoXML.append(f'<Ponto><x>{xn}</x><y>{yn}</y><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura></Ponto>')
    
 #talvez de pra criar so uma classe dessas funcoes ?
 def cliqueMapa(event):
@@ -486,18 +497,20 @@ def donothing():
          
 def novoQuadro():
    global historico
-   historico.clear()
+   historicoXML.clear()
+   historicoQuadro.clear()
+   historicoMapa.clear()
    desenhoQuadro.delete("all")
    desenhoMapa.delete("all")
    
 def salvaHistorico():
-   global historico
+   global historicoXML
    slv = '<?xml version="1.0" encoding="UTF-8" standalone="no"?><Figura>'
-   for linha in historico:
+   for linha in historicoXML:
       slv += linha
    slv += f'</Figura>'
    with open('output.xml', 'w') as file:
-    file.write(slv)
+      file.write(slv)
    #return slv
 
 def inputArquivo(nomeArq='output.xml'):
@@ -506,7 +519,8 @@ def inputArquivo(nomeArq='output.xml'):
    global ESPESSURA_SELETA
    global desenhoQuadro
    global desenhoMapa
-   historico.clear()
+   historicoQuadro.clear()
+   historicoMapa.clear()
    desenhoQuadro.delete("all")
    desenhoMapa.delete("all")
    # Open XML document using minidom parser
@@ -564,11 +578,13 @@ def inputArquivo(nomeArq='output.xml'):
             print("Circulo: Espessura nao encontrada")
          ponto = PontoGr(xmlP[0],xmlP[1], COR_SELETA, ESPESSURA_SELETA)
          ponto.origem(-1000, -1000)
-         historico.append(ponto)
+         historicoQuadro.append(ponto)
          ponto.desenhaPonto(desenhoQuadro)
          ponto = PontoGr(xmlP[0]/3, xmlP[1]/3, COR_SELETA, ESPESSURA_SELETA/3)
          ponto.origem(-1000, -1000)
          ponto.desenhaPonto(desenhoMapa)
+         historicoMapa.append(ponto)
+         
       
       if(geo.nodeName == 'Reta'):
          #print(f'Tem uma reta:')
@@ -632,9 +648,10 @@ def inputArquivo(nomeArq='output.xml'):
             print("Circulo: Espessura nao encontrada")
          reta = RetaGr(xmlPA[0], xmlPA[1], xmlPB[0], xmlPB[1], COR_SELETA, ESPESSURA_SELETA)
          reta.desenhaLine(desenhoQuadro)
-         historico.append(reta)
+         historicoQuadro.append(reta)
          reta = RetaGr(xmlPA[0]/3, xmlPA[1]/3, xmlPB[0]/3, xmlPB[1]/3, COR_SELETA, ESPESSURA_SELETA/3)
          reta.desenhaLine(desenhoMapa)
+         historicoMapa.append(reta)
 
          
       if(geo.nodeName == 'Circulo'):
@@ -692,17 +709,57 @@ def inputArquivo(nomeArq='output.xml'):
             print("Circulo: Espessura nao encontrada")
          circulo = CirculoGr( xmlCentro[0], xmlCentro[1], xmlRaio, COR_SELETA, ESPESSURA_SELETA)
          circulo.desenhaCirculoMidPoint(desenhoQuadro)
-         historico.append(circulo)
+         historicoQuadro.append(circulo)
          circulinho = CirculoGr( xmlCentro[0]/3, xmlCentro[1]/3, xmlRaio/3, COR_SELETA, ESPESSURA_SELETA/3)
          circulinho.desenhaCirculoMidPoint(desenhoMapa)
+         historicoMapa.append(circulo)
 
 
       if(geo.nodeName == 'Poligono'):
          #print(f'Tem um poligono')
          pass
-   print(f'Historico com {len(historico)} geometrias')
+   print(f'Historico com {len(historicoQuadro)} geometrias')
 
-
+def desenhaHistorico():
+   for geo in historicoQuadro:
+      try:
+         geo.desenhaLine(desenhoQuadro)
+         #geo.desenhaLine(desenhoMapa)
+         print("eh linha")
+      except:
+         pass
+      try:
+         geo.desenhaCirculoMidPoint(desenhoQuadro)
+         #geo.desenhaCirculoMidPoint(desenhoMapa)
+         print("eh circulo")
+      except:
+         pass
+      try:
+         geo.desenhaPonto(desenhoQuadro)
+         #geo.desenhaPonto(desenhoMapa)
+         print("eh ponto")
+      except:
+         pass
+   for geo in historicoMapa:
+      try:
+         geo.desenhaLine(desenhoMapa)
+         #geo.desenhaLine(desenhoMapa)
+         print("eh linha")
+      except:
+         pass
+      try:
+         geo.desenhaCirculoMidPoint(desenhoMapa)
+         #geo.desenhaCirculoMidPoint(desenhoMapa)
+         print("eh circulo")
+      except:
+         pass
+      try:
+         geo.desenhaPonto(desenhoMapa)
+         #geo.desenhaPonto(desenhoMapa)
+         print("eh ponto")
+      except:
+         pass
+         
 def sobre():
    #nem funciona, mas pq?
    #ta faltando o geometry tb
