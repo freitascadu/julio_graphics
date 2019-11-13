@@ -7,6 +7,8 @@ from retaGr import *
 from circulo import *
 from circuloGr import *
 from math import *
+from xml.dom.minidom import *
+from xml.dom.minidom import parse
 
 STD_ALTURA = 720
 STD_LARGURA = 1280
@@ -48,61 +50,7 @@ root.minsize(STD_LARGURA, STD_ALTURA)
 root.maxsize(STD_LARGURA, STD_ALTURA)
 root.aspect(1,1,1,1)
 
-#funcao pra exemplo
 
-def donothing():
-   filewin = Toplevel(root) #toplevel eh uma janela que abre inrriba da outra, puxa o foco
-   button = Button(filewin, text="Botao faz nada")
-   button.pack()
-   
-def sobre():
-   #nem funciona, mas pq?
-   #ta faltando o geometry tb
-   sobre = Toplevel(root, bg=STD_BG, height=500, width=350)
-   #toplevel eh uma janela que abre inrriba da outra, puxa o foco
-   junto = Frame(sobre, bg=sobre['bg'])
-   junto.pack(expand=True, fill=BOTH)
-   
-   sImg = PhotoImage(file='icons/Pepeg.gif')
-   pepeg = Label(junto, image=sImg, bg=sobre['bg'])
-   pepeg.grid(row=0, column=0)
-
-   sobreTexto = f'Feito por:\nEmerson B Grisi\nCarlos Eduardo Freitas\nCaio Furtado\nGabriel França\n'
-   anuncio = Label(junto, text=sobreTexto, bg=sobre['bg'], fg=BOTAO_FG)
-   #anuncio.grid(row=1, column=0)
- 
-#ORGANIZACOES DE MENU
-#menu arquivo
-menuBarra = Menu(root)
-menuArquivo = Menu(menuBarra, tearoff=0)
-menuArquivo.add_command(label="Novo", command=donothing)
-menuArquivo.add_command(label="Abrir", command=donothing)
-menuArquivo.add_command(label="Salvar", command=donothing)
-menuArquivo.add_command(label="Salvar como...", command=donothing)
-menuArquivo.add_command(label="Fechar", command=donothing)
-menuArquivo.add_separator()
-menuArquivo.add_command(label="Sair", command=root.quit)
-menuBarra.add_cascade(label="Arquivo", menu=menuArquivo)
-
-#menu editar
-menuEditar = Menu(menuBarra, tearoff=0)
-menuEditar.add_command(label="Desfazer", command=donothing)
-menuEditar.add_separator()
-menuEditar.add_command(label="Recortar", command=donothing)
-menuEditar.add_command(label="Copiar", command=donothing)
-menuEditar.add_command(label="Colar", command=donothing)
-menuEditar.add_command(label="Apagar", command=donothing)
-menuEditar.add_command(label="Selecionar Tudo", command=donothing)
-menuBarra.add_cascade(label="Editar", menu=menuEditar)
-
-#menu ajuda
-menuAjuda = Menu(menuBarra, tearoff=0)
-menuAjuda.add_command(label="Documentação", command=donothing)
-menuAjuda.add_command(label="Sobre...", command=sobre)
-menuBarra.add_cascade(label="Ajuda", menu=menuAjuda)
-
-#aplica o menu
-root.config(menu=menuBarra)
 
 
 #ORGANIZACAO DE FRAMES
@@ -190,7 +138,8 @@ def cliqueDesenho(event):
    msg.config(text=str_status)
    if(ferramenta=="Mão"):
       pass
-   elif(ferramenta=="Apagar"):
+   elif(ferramenta=="Poligono"):
+      print("Desenhar poligono aqui")
       pass
    elif(ferramenta=="Ponto"):
       ponto1 = PontoGr(event.x,event.y, COR_SELETA, ESPESSURA_SELETA)
@@ -207,7 +156,7 @@ def cliqueDesenho(event):
       red =   int(f'{COR_SELETA[1]}{COR_SELETA[2]}',16)
       green = int(f'{COR_SELETA[3]}{COR_SELETA[4]}',16)
       blue =  int(f'{COR_SELETA[5]}{COR_SELETA[6]}',16)
-      historico.append(f'<Ponto><x>{xn}</x><y>{yn}</y></Ponto><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura>')
+      historico.append(f'<Ponto><x>{xn}</x><y>{yn}</y><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura></Ponto>')
       msg.config(text=str_status+f'Desenhei um ponto! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
    elif(ferramenta=="Reta"):
       #se a pilha ta vazia adiciona
@@ -239,7 +188,7 @@ def cliqueDesenho(event):
          red =   int(f'{COR_SELETA[1]}{COR_SELETA[2]}',16)
          green = int(f'{COR_SELETA[3]}{COR_SELETA[4]}',16)
          blue =  int(f'{COR_SELETA[5]}{COR_SELETA[6]}',16)
-         historico.append(f'<Reta><Ponto><x>{xn}</x><y>{yn}</y></Ponto><Ponto><x>{xn2}</x><y>{yn2}</y></Ponto><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor></Reta>')
+         historico.append(f'<Reta><Ponto><x>{xn}</x><y>{yn}</y></Ponto><Ponto><x>{xn2}</x><y>{yn2}</y></Ponto><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura></Reta>')
          
          msg.config(text=str_status+f'Desenhei uma reta! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
          
@@ -256,6 +205,16 @@ def cliqueDesenho(event):
          circulo.desenhaCirculoMidPoint(desenhoQuadro)
          circulinho = CirculoGr( centro[0]/3, centro[1]/3, raio/3, COR_SELETA, ESPESSURA_SELETA/3)
          circulinho.desenhaCirculoMidPoint(desenhoMapa)
+
+         xn = centro[0]/desenhoQuadro.winfo_width()
+         yn = centro[1]/desenhoQuadro.winfo_height()
+         
+         red =   int(f'{COR_SELETA[1]}{COR_SELETA[2]}',16)
+         green = int(f'{COR_SELETA[3]}{COR_SELETA[4]}',16)
+         blue =  int(f'{COR_SELETA[5]}{COR_SELETA[6]}',16)
+         
+         historico.append(f'<Circulo><Ponto><x>{xn}</x><y>{yn}</y></Ponto><Raio>{raio}</Raio><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura></Circulo>')
+
          msg.config(text=str_status+f'Desenhei Circulo! raio: {round(raio)} e centro: {centro[0]},{centro[1]}')
          
    elif(ferramenta=="Letra"):
@@ -322,7 +281,7 @@ def riscoDesenho(event):
       red =   int(f'{COR_SELETA[1]}{COR_SELETA[2]}',16)
       green = int(f'{COR_SELETA[3]}{COR_SELETA[4]}',16)
       blue =  int(f'{COR_SELETA[5]}{COR_SELETA[6]}',16)
-      historico.append(f'<Ponto><x>{xn}</x><y>{yn}</y></Ponto><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor>')
+      historico.append(f'<Ponto><x>{xn}</x><y>{yn}</y><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura></Ponto>')
    
 #talvez de pra criar so uma classe dessas funcoes ?
 def cliqueMapa(event):
@@ -390,12 +349,12 @@ def mao():
    ferram['mao'].config(state=DISABLED, relief=SUNKEN)
    desenhoQuadro.config(cursor="hand2")
    
-def apagar():
+def poligono():
    global ferramenta
-   ferramenta = "Apagar"
+   ferramenta = "Poligono"
    for f in ferram:
-      if(f!='apagar'):ferram[f].config(state=ACTIVE, relief=RAISED)
-   ferram['apagar'].config(state=DISABLED, relief=SUNKEN)
+      if(f!='poligono'):ferram[f].config(state=ACTIVE, relief=RAISED)
+   ferram['poligono'].config(state=DISABLED, relief=SUNKEN)
    desenhoQuadro.config(cursor="tcross")
    
 def ponto():
@@ -447,7 +406,7 @@ def spray():
 
 #imagens dos botoes:
 bmMao=      BitmapImage(file="icons/mao.xbm", background=BOTAO_BG, foreground=BOTAO_FG)
-bmApagar=   BitmapImage(file="icons/apagar.xbm", background=BOTAO_BG, foreground=BOTAO_FG)
+bmPoligono=     BitmapImage(file="icons/poligono.xbm", background=BOTAO_BG, foreground=BOTAO_FG)
 bmPonto=    BitmapImage(file="icons/ponto.xbm", background=BOTAO_BG, foreground=BOTAO_FG)
 bmReta=     BitmapImage(file="icons/reta.xbm", background=BOTAO_BG, foreground=BOTAO_FG)
 bmCirculo=  BitmapImage(file="icons/circulo.xbm", background=BOTAO_BG, foreground=BOTAO_FG)
@@ -458,7 +417,7 @@ bmSpray=    BitmapImage(file="icons/spray.xbm", background=BOTAO_BG, foreground=
 #setup: command chama a funcao dele, que ja troca o cursor no desenho e levanta e abaixa os botoes
 ferram = {
    'mao':      Button(ferrEsq, command = mao, bd=BOTAO_BD, image=bmMao, state=DISABLED, relief=SUNKEN, bg=BOTAO_BG, fg=BOTAO_FG, activeforeground=BOTAO_FG, activebackground=BOTAO_BG),
-   'apagar':   Button(ferrEsq, command = apagar, bd=BOTAO_BD, image=bmApagar, state=ACTIVE, relief=RAISED, bg=BOTAO_BG, fg=BOTAO_FG, activeforeground=BOTAO_FG, activebackground=BOTAO_BG),
+   'poligono': Button(ferrEsq, command = poligono, bd=BOTAO_BD, image=bmPoligono, state=ACTIVE, relief=RAISED, bg=BOTAO_BG, fg=BOTAO_FG, activeforeground=BOTAO_FG, activebackground=BOTAO_BG),
    'ponto':    Button(ferrEsq, command = ponto, bd=BOTAO_BD, image=bmPonto, state=ACTIVE, relief=RAISED, bg=BOTAO_BG, fg=BOTAO_FG, activeforeground=BOTAO_FG, activebackground=BOTAO_BG),
    'reta':     Button(ferrEsq, command = reta, bd=BOTAO_BD, image=bmReta, state=ACTIVE, relief=RAISED, bg=BOTAO_BG, fg=BOTAO_FG, activeforeground=BOTAO_FG, activebackground=BOTAO_BG),
    'circulo':  Button(ferrEsq, command = circulo, bd=BOTAO_BD, image=bmCirculo, state=ACTIVE, relief=RAISED, bg=BOTAO_BG, fg=BOTAO_FG, activeforeground=BOTAO_FG, activebackground=BOTAO_BG),
@@ -468,7 +427,7 @@ ferram = {
    }
 #posicionamento em grid (uma row)
 ferram['mao'].grid(row=0, column=0)
-ferram['apagar'].grid(row=0, column=1)
+ferram['poligono'].grid(row=0, column=1)
 ferram['ponto'].grid(row=0, column=2)
 ferram['reta'].grid(row=0, column=3)
 ferram['circulo'].grid(row=0, column=4)
@@ -511,19 +470,286 @@ def escolheCor(event):
    bmCorConfig.config(background=COR_SELETA)
 corConfig.bind("<Button-1>",escolheCor)
 
-
 def escolheEspessura():
    global ESPESSURA_SELETA
    ESPESSURA_SELETA=int(espConfig.get())
 espConfig.config(command=escolheEspessura)
 #movido o command pra nao reclamar que escolhe espessura nao existe
 
+
+#funcao pra exemplo
+
+def donothing():
+   filewin = Toplevel(root) #toplevel eh uma janela que abre inrriba da outra, puxa o foco
+   button = Button(filewin, text="Botao faz nada")
+   button.pack()
+         
+def novoQuadro():
+   global historico
+   historico.clear()
+   desenhoQuadro.delete("all")
+   desenhoMapa.delete("all")
+   
 def salvaHistorico():
    global historico
    slv = '<?xml version="1.0" encoding="UTF-8" standalone="no"?><Figura>'
    for linha in historico:
       slv += linha
    slv += f'</Figura>'
-   return slv
+   with open('output.xml', 'w') as file:
+    file.write(slv)
+   #return slv
+
+def inputArquivo(nomeArq='output.xml'):
+   global historico
+   global COR_SELETA
+   global ESPESSURA_SELETA
+   global desenhoQuadro
+   global desenhoMapa
+   historico.clear()
+   desenhoQuadro.delete("all")
+   desenhoMapa.delete("all")
+   # Open XML document using minidom parser
+   DOMTree = xml.dom.minidom.parse(nomeArq)
+   figura = DOMTree.documentElement
+   print(f'Figura com {len(figura.childNodes)} geometrias')
+   for geo in figura.childNodes[:]:
+      #print({geo.nodeName})
+      if(geo.nodeName == 'Ponto'):
+         #print(f'Tem um ponto:')
+         try:
+            xmlX = float(geo.getElementsByTagName('x')[0].childNodes[0].data)
+            xmlY = float(geo.getElementsByTagName('y')[0].childNodes[0].data)
+            xmlP = [xmlX, xmlY]
+            del xmlX
+            del xmlY
+            xmlP[0] = int(xmlP[0]*desenhoQuadro.winfo_width())
+            xmlP[1] = int(xmlP[1]*desenhoQuadro.winfo_width())
+            #print(f'Ponto: Ponto é: {xmlP[0]},{xmlP[1]}')
+         except:
+            print("Ponto: X e Y nao encontrado")
+         try:
+            xmlCor = geo.getElementsByTagName('Cor')[0]
+            xmlCorR = int(xmlCor.getElementsByTagName('R')[0].childNodes[0].data)
+            xmlCorG = int(xmlCor.getElementsByTagName('G')[0].childNodes[0].data)
+            xmlCorB = int(xmlCor.getElementsByTagName('B')[0].childNodes[0].data)
+            #conversao pra hex com #
+            if(xmlCorR > 15):
+               xmlCorR = f'{hex(xmlCorR)[2]}{hex(xmlCorR)[3]}'
+            else:
+               xmlCorR = f'0{hex(xmlCorR)[2]}'
+            if(xmlCorG > 15):
+               xmlCorG = f'{hex(xmlCorG)[2]}{hex(xmlCorG)[3]}'
+            else:
+               xmlCorG = f'0{hex(xmlCorG)[2]}'
+            if(xmlCorB > 15):
+               xmlCorB = f'{hex(xmlCorB)[2]}{hex(xmlCorB)[3]}'
+            else:
+               xmlCorB = f'0{hex(xmlCorB)[2]}'
+            xmlCor = f'#{xmlCorR}{xmlCorG}{xmlCorB}'
+            #print(f'Circulo: Cor é: {xmlCor}')
+            del xmlCorR
+            del xmlCorG
+            del xmlCorB
+            COR_SELETA = xmlCor
+            corConfig.config(background=COR_SELETA)
+            bmCorConfig.config(background=COR_SELETA)
+         except:
+            print("Circulo: Cor nao encontrada")
+         try:
+            xmlEspessura = int(geo.getElementsByTagName('Espessura')[0].childNodes[0].data)
+            #print(f'Circulo: Espessura é: {xmlEspessura}')
+            ESPESSURA_SELETA = xmlEspessura
+         except:
+            print("Circulo: Espessura nao encontrada")
+         ponto = PontoGr(xmlP[0],xmlP[1], COR_SELETA, ESPESSURA_SELETA)
+         ponto.origem(-1000, -1000)
+         historico.append(ponto)
+         ponto.desenhaPonto(desenhoQuadro)
+         ponto = PontoGr(xmlP[0]/3, xmlP[1]/3, COR_SELETA, ESPESSURA_SELETA/3)
+         ponto.origem(-1000, -1000)
+         ponto.desenhaPonto(desenhoMapa)
+      
+      if(geo.nodeName == 'Reta'):
+         #print(f'Tem uma reta:')
+         try:
+            xmlPA = geo.getElementsByTagName('Ponto')[0]
+            xmlX = float(xmlPA.getElementsByTagName('x')[0].childNodes[0].data)
+            xmlY = float(xmlPA.getElementsByTagName('y')[0].childNodes[0].data)
+            xmlPA = [xmlX, xmlY]
+            del xmlX
+            del xmlY
+            xmlPA[0] = int(xmlPA[0]*desenhoQuadro.winfo_width())
+            xmlPA[1] = int(xmlPA[1]*desenhoQuadro.winfo_width())
+            #print(f'Reta: Ponto A é: {xmlPA[0]},{xmlPA[1]}')
+         except:
+            print("Reta: Ponto A nao encontrado")
+         try:
+            xmlPB = geo.getElementsByTagName('Ponto')[1]
+            xmlX = float(xmlPB.getElementsByTagName('x')[0].childNodes[0].data)
+            xmlY = float(xmlPB.getElementsByTagName('y')[0].childNodes[0].data)
+            xmlPB = [xmlX, xmlY]
+            del xmlX
+            del xmlY
+            xmlPB[0] = int(xmlPB[0]*desenhoQuadro.winfo_width())
+            xmlPB[1] = int(xmlPB[1]*desenhoQuadro.winfo_width())
+            #print(f'Reta: Ponto B é: {xmlPB[0]},{xmlPB[1]}')
+         except:
+            print("Reta: Ponto B nao encontrado")
+         try:
+            xmlCor = geo.getElementsByTagName('Cor')[0]
+            xmlCorR = int(xmlCor.getElementsByTagName('R')[0].childNodes[0].data)
+            xmlCorG = int(xmlCor.getElementsByTagName('G')[0].childNodes[0].data)
+            xmlCorB = int(xmlCor.getElementsByTagName('B')[0].childNodes[0].data)
+            #conversao pra hex com #
+            if(xmlCorR > 15):
+               xmlCorR = f'{hex(xmlCorR)[2]}{hex(xmlCorR)[3]}'
+            else:
+               xmlCorR = f'0{hex(xmlCorR)[2]}'
+            if(xmlCorG > 15):
+               xmlCorG = f'{hex(xmlCorG)[2]}{hex(xmlCorG)[3]}'
+            else:
+               xmlCorG = f'0{hex(xmlCorG)[2]}'
+            if(xmlCorB > 15):
+               xmlCorB = f'{hex(xmlCorB)[2]}{hex(xmlCorB)[3]}'
+            else:
+               xmlCorB = f'0{hex(xmlCorB)[2]}'
+            xmlCor = f'#{xmlCorR}{xmlCorG}{xmlCorB}'
+            #print(f'Circulo: Cor é: {xmlCor}')
+            del xmlCorR
+            del xmlCorG
+            del xmlCorB
+            COR_SELETA = xmlCor
+            corConfig.config(background=COR_SELETA)
+            bmCorConfig.config(background=COR_SELETA)
+         except:
+            print("Circulo: Cor nao encontrada")
+         try:
+            xmlEspessura = int(geo.getElementsByTagName('Espessura')[0].childNodes[0].data)
+            #print(f'Circulo: Espessura é: {xmlEspessura}')
+            ESPESSURA_SELETA = xmlEspessura
+         except:
+            print("Circulo: Espessura nao encontrada")
+         reta = RetaGr(xmlPA[0], xmlPA[1], xmlPB[0], xmlPB[1], COR_SELETA, ESPESSURA_SELETA)
+         reta.desenhaLine(desenhoQuadro)
+         historico.append(reta)
+         reta = RetaGr(xmlPA[0]/3, xmlPA[1]/3, xmlPB[0]/3, xmlPB[1]/3, COR_SELETA, ESPESSURA_SELETA/3)
+         reta.desenhaLine(desenhoMapa)
+
+         
+      if(geo.nodeName == 'Circulo'):
+         #print(f'Tem um Circulo:')
+         try:
+            xmlCentro = geo.getElementsByTagName('Ponto')[0]
+            xmlX = float(xmlCentro.getElementsByTagName('x')[0].childNodes[0].data)
+            xmlY = float(xmlCentro.getElementsByTagName('y')[0].childNodes[0].data)
+            xmlCentro = [xmlX, xmlY]
+            del xmlX
+            del xmlY
+            xmlCentro[0] = int(xmlCentro[0]*desenhoQuadro.winfo_width())
+            xmlCentro[1] = int(xmlCentro[1]*desenhoQuadro.winfo_width())
+            #print(f'Circulo: Centro é: {xmlCentro[0]},{xmlCentro[1]}')
+         except:
+            print("Circulo: Ponto de centro nao encontrado")
+         try:
+            xmlRaio = float(geo.getElementsByTagName('Raio')[0].childNodes[0].data)
+            #print(f'Circulo: Raio é: {xmlRaio}')
+         except:
+            print("Circulo: Raio nao encontrado")
+         try:
+            xmlCor = geo.getElementsByTagName('Cor')[0]
+            xmlCorR = int(xmlCor.getElementsByTagName('R')[0].childNodes[0].data)
+            xmlCorG = int(xmlCor.getElementsByTagName('G')[0].childNodes[0].data)
+            xmlCorB = int(xmlCor.getElementsByTagName('B')[0].childNodes[0].data)
+            #conversao pra hex com #
+            if(xmlCorR > 15):
+               xmlCorR = f'{hex(xmlCorR)[2]}{hex(xmlCorR)[3]}'
+            else:
+               xmlCorR = f'0{hex(xmlCorR)[2]}'
+            if(xmlCorG > 15):
+               xmlCorG = f'{hex(xmlCorG)[2]}{hex(xmlCorG)[3]}'
+            else:
+               xmlCorG = f'0{hex(xmlCorG)[2]}'
+            if(xmlCorB > 15):
+               xmlCorB = f'{hex(xmlCorB)[2]}{hex(xmlCorB)[3]}'
+            else:
+               xmlCorB = f'0{hex(xmlCorB)[2]}'
+            xmlCor = f'#{xmlCorR}{xmlCorG}{xmlCorB}'
+            #print(f'Circulo: Cor é: {xmlCor}')
+            del xmlCorR
+            del xmlCorG
+            del xmlCorB
+            COR_SELETA = xmlCor
+            corConfig.config(background=COR_SELETA)
+            bmCorConfig.config(background=COR_SELETA)
+         except:
+            print("Circulo: Cor nao encontrada")
+         try:
+            xmlEspessura = int(geo.getElementsByTagName('Espessura')[0].childNodes[0].data)
+            #print(f'Circulo: Espessura é: {xmlEspessura}')
+            ESPESSURA_SELETA = xmlEspessura
+         except:
+            print("Circulo: Espessura nao encontrada")
+         circulo = CirculoGr( xmlCentro[0], xmlCentro[1], xmlRaio, COR_SELETA, ESPESSURA_SELETA)
+         circulo.desenhaCirculoMidPoint(desenhoQuadro)
+         historico.append(circulo)
+         circulinho = CirculoGr( xmlCentro[0]/3, xmlCentro[1]/3, xmlRaio/3, COR_SELETA, ESPESSURA_SELETA/3)
+         circulinho.desenhaCirculoMidPoint(desenhoMapa)
+
+
+      if(geo.nodeName == 'Poligono'):
+         #print(f'Tem um poligono')
+         pass
+   print(f'Historico com {len(historico)} geometrias')
+
+
+def sobre():
+   #nem funciona, mas pq?
+   #ta faltando o geometry tb
+   sobre = Toplevel(root, bg=STD_BG, height=500, width=350)
+   #toplevel eh uma janela que abre inrriba da outra, puxa o foco
+   junto = Frame(sobre, bg=sobre['bg'])
+   junto.pack(expand=True, fill=BOTH)
+   
+   sImg = PhotoImage(file='icons/Pepeg.gif')
+   pepeg = Label(junto, image=sImg, bg=sobre['bg'])
+   pepeg.grid(row=0, column=0)
+
+   sobreTexto = f'Feito por:\nEmerson B Grisi\nCarlos Eduardo Freitas\nCaio Furtado\nGabriel França\n'
+   anuncio = Label(junto, text=sobreTexto, bg=sobre['bg'], fg=BOTAO_FG)
+   #anuncio.grid(row=1, column=0)
+ 
+#ORGANIZACOES DE MENU
+#menu arquivo
+menuBarra = Menu(root)
+menuArquivo = Menu(menuBarra, tearoff=0)
+menuArquivo.add_command(label="Novo", command=novoQuadro)
+menuArquivo.add_command(label="Abrir", command=inputArquivo)
+menuArquivo.add_command(label="Salvar", command=salvaHistorico)
+menuArquivo.add_command(label="Salvar como...", command=donothing)
+menuArquivo.add_command(label="Fechar", command=donothing)
+menuArquivo.add_separator()
+menuArquivo.add_command(label="Sair", command=root.quit)
+menuBarra.add_cascade(label="Arquivo", menu=menuArquivo)
+
+#menu editar
+menuEditar = Menu(menuBarra, tearoff=0)
+menuEditar.add_command(label="Desfazer", command=donothing)
+menuEditar.add_separator()
+menuEditar.add_command(label="Recortar", command=donothing)
+menuEditar.add_command(label="Copiar", command=donothing)
+menuEditar.add_command(label="Colar", command=donothing)
+menuEditar.add_command(label="Apagar", command=donothing)
+menuEditar.add_command(label="Selecionar Tudo", command=donothing)
+menuBarra.add_cascade(label="Editar", menu=menuEditar)
+
+#menu ajuda
+menuAjuda = Menu(menuBarra, tearoff=0)
+menuAjuda.add_command(label="Documentação", command=donothing)
+menuAjuda.add_command(label="Sobre...", command=sobre)
+menuBarra.add_cascade(label="Ajuda", menu=menuAjuda)
+
+#aplica o menu
+root.config(menu=menuBarra)
 
 #janela.mainloop()
