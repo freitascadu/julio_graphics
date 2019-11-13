@@ -207,10 +207,10 @@ def cliqueDesenho(event):
       else:
          raioP = (event.x,event.y)
          centro = pilhaGeo.pop()
-         raio = sqrt((raioP[0]-centro[0])*(raioP[0]-centro[0])+(raioP[1]-centro[1])*(raioP[1]-centro[1]))/desenhoQuadro.winfo_width()
-         circulo = CirculoGr( centro[0], centro[1], raio, COR_SELETA, ESPESSURA_SELETA)
+         raio = (sqrt((raioP[0]-centro[0])*(raioP[0]-centro[0])+(raioP[1]-centro[1])*(raioP[1]-centro[1])))/desenhoQuadro.winfo_width()
+         circulo = CirculoGr( centro[0], centro[1], raio*desenhoQuadro.winfo_width(), COR_SELETA, ESPESSURA_SELETA)
          circulo.desenhaCirculoMidPoint(desenhoQuadro)
-         circulinho = CirculoGr( centro[0]/3, centro[1]/3, raio/3, COR_SELETA, ESPESSURA_SELETA/3)
+         circulinho = CirculoGr( centro[0]/3, centro[1]/3, (raio*desenhoQuadro.winfo_width())/3, COR_SELETA, ESPESSURA_SELETA/3)
          circulinho.desenhaCirculoMidPoint(desenhoMapa)
          historicoQuadro.append(circulo)
          historicoMapa.append(circulinho)
