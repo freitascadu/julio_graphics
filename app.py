@@ -207,7 +207,7 @@ def cliqueDesenho(event):
       else:
          raioP = (event.x,event.y)
          centro = pilhaGeo.pop()
-         raio = sqrt((raioP[0]-centro[0])*(raioP[0]-centro[0])+(raioP[1]-centro[1])*(raioP[1]-centro[1]))
+         raio = sqrt((raioP[0]-centro[0])*(raioP[0]-centro[0])+(raioP[1]-centro[1])*(raioP[1]-centro[1]))/desenhoQuadro.winfo_width()
          circulo = CirculoGr( centro[0], centro[1], raio, COR_SELETA, ESPESSURA_SELETA)
          circulo.desenhaCirculoMidPoint(desenhoQuadro)
          circulinho = CirculoGr( centro[0]/3, centro[1]/3, raio/3, COR_SELETA, ESPESSURA_SELETA/3)
@@ -561,7 +561,7 @@ def inputArquivo(nomeArq='output.xml'):
             else:
                xmlCorB = f'0{hex(xmlCorB)[2]}'
             xmlCor = f'#{xmlCorR}{xmlCorG}{xmlCorB}'
-            #print(f'Circulo: Cor é: {xmlCor}')
+            #print(f'Ponto: Cor é: {xmlCor}')
             del xmlCorR
             del xmlCorG
             del xmlCorB
@@ -569,13 +569,13 @@ def inputArquivo(nomeArq='output.xml'):
             corConfig.config(background=COR_SELETA)
             bmCorConfig.config(background=COR_SELETA)
          except:
-            print("Circulo: Cor nao encontrada")
+            print("Ponto: Cor nao encontrada")
          try:
             xmlEspessura = int(geo.getElementsByTagName('Espessura')[0].childNodes[0].data)
-            #print(f'Circulo: Espessura é: {xmlEspessura}')
+            #print(f'Ponto: Espessura é: {xmlEspessura}')
             ESPESSURA_SELETA = xmlEspessura
          except:
-            print("Circulo: Espessura nao encontrada")
+            print("Ponto: Espessura nao encontrada")
          ponto = PontoGr(xmlP[0],xmlP[1], COR_SELETA, ESPESSURA_SELETA)
          ponto.origem(-1000, -1000)
          historicoQuadro.append(ponto)
@@ -631,7 +631,7 @@ def inputArquivo(nomeArq='output.xml'):
             else:
                xmlCorB = f'0{hex(xmlCorB)[2]}'
             xmlCor = f'#{xmlCorR}{xmlCorG}{xmlCorB}'
-            #print(f'Circulo: Cor é: {xmlCor}')
+            #print(f'Reta: Cor é: {xmlCor}')
             del xmlCorR
             del xmlCorG
             del xmlCorB
@@ -639,13 +639,13 @@ def inputArquivo(nomeArq='output.xml'):
             corConfig.config(background=COR_SELETA)
             bmCorConfig.config(background=COR_SELETA)
          except:
-            print("Circulo: Cor nao encontrada")
+            print("Reta: Cor nao encontrada")
          try:
             xmlEspessura = int(geo.getElementsByTagName('Espessura')[0].childNodes[0].data)
-            #print(f'Circulo: Espessura é: {xmlEspessura}')
+            #print(f'Reta: Espessura é: {xmlEspessura}')
             ESPESSURA_SELETA = xmlEspessura
          except:
-            print("Circulo: Espessura nao encontrada")
+            print("Reta: Espessura nao encontrada")
          reta = RetaGr(xmlPA[0], xmlPA[1], xmlPB[0], xmlPB[1], COR_SELETA, ESPESSURA_SELETA)
          reta.desenhaLine(desenhoQuadro)
          historicoQuadro.append(reta)
@@ -669,7 +669,7 @@ def inputArquivo(nomeArq='output.xml'):
          except:
             print("Circulo: Ponto de centro nao encontrado")
          try:
-            xmlRaio = float(geo.getElementsByTagName('Raio')[0].childNodes[0].data)
+            xmlRaio = float(geo.getElementsByTagName('Raio')[0].childNodes[0].data)*desenhoQuadro.winfo_width()
             #print(f'Circulo: Raio é: {xmlRaio}')
          except:
             print("Circulo: Raio nao encontrado")
