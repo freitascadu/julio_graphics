@@ -37,6 +37,7 @@ ESPESSURA_MIN = 2
 ferramenta = "Mão"
 
 pilhaGeo = []
+historico = []
 
 root = Tk()
 root.config(width=STD_LARGURA, height=STD_ALTURA)
@@ -44,7 +45,7 @@ root.title("PobroShop")
 geo = f'{STD_LARGURA}x{STD_ALTURA}+50+50'
 root.geometry(geo)
 root.minsize(STD_LARGURA, STD_ALTURA)
-#root.maxsize(STD_LARGURA, STD_ALTURA)
+root.maxsize(STD_LARGURA, STD_ALTURA)
 root.aspect(1,1,1,1)
 
 #funcao pra exemplo
@@ -201,8 +202,13 @@ def cliqueDesenho(event):
       ponto2 = PontoGr(event.x/3, event.y/3, COR_SELETA, ESPESSURA_SELETA/3)
       ponto2.origem(-1000, -1000)
       ponto2.desenhaPonto(desenhoMapa)
+      xn = event.x/desenhoQuadro.winfo_width()
+      yn = event.y/desenhoQuadro.winfo_height()
+      red =   int(f'{COR_SELETA[1]}{COR_SELETA[2]}',16)
+      green = int(f'{COR_SELETA[3]}{COR_SELETA[4]}',16)
+      blue =  int(f'{COR_SELETA[5]}{COR_SELETA[6]}',16)
+      historico.append(f'<Ponto><x>{xn}</x><y>{yn}</y></Ponto><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor><Espessura>{ESPESSURA_SELETA}</Espessura>')
       msg.config(text=str_status+f'Desenhei um ponto! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
-      
    elif(ferramenta=="Reta"):
       #se a pilha ta vazia adiciona
       #se a pilha ja tem um ponto, adiciona outro e plota a reta
@@ -220,14 +226,20 @@ def cliqueDesenho(event):
          pB = pilhaGeo.pop()
          pC = pA
          pD = pB
-         
          reta = RetaGr(int(pA.x), int(pA.y), int(pB.x), int(pB.y), COR_SELETA, ESPESSURA_SELETA)
          reta.desenhaLine(desenhoQuadro)
-
          #pq nao desenha no mapa?
-         print(f'pC.x:{pC.x} pC.y:{pC.y}')
          reta2 = RetaGr(int(pC.x/3), int(pC.y/3), int(pD.x/3), int(pD.y/3), COR_SELETA, ESPESSURA_SELETA/3)
          reta2.desenhaLine(desenhoMapa)
+         
+         xn = pA.x/desenhoQuadro.winfo_width()
+         yn = pA.y/desenhoQuadro.winfo_height()
+         xn2= pB.x/desenhoQuadro.winfo_width()
+         yn2= pB.y/desenhoQuadro.winfo_height()
+         red =   int(f'{COR_SELETA[1]}{COR_SELETA[2]}',16)
+         green = int(f'{COR_SELETA[3]}{COR_SELETA[4]}',16)
+         blue =  int(f'{COR_SELETA[5]}{COR_SELETA[6]}',16)
+         historico.append(f'<Reta><Ponto><x>{xn}</x><y>{yn}</y></Ponto><Ponto><x>{xn2}</x><y>{yn2}</y></Ponto><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor></Reta>')
          
          msg.config(text=str_status+f'Desenhei uma reta! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
          
@@ -250,17 +262,67 @@ def cliqueDesenho(event):
       pass
    elif(ferramenta=="Pencil"):
       pass
+      #<B1-Motion>
    elif(ferramenta=="Spray"):
       pass
 
 
-
-
-
-
-
-
-
+def riscoDesenho(event):
+   global desenhoQuadro
+   global desenhoMapa
+   global pilhaGeo
+   infoStatus.config(bitmap="warning")
+   str_status = f'Ferramenta {ferramenta}: Risco em {event.x},{event.y} do Desenho. '
+   msg.config(text=str_status)
+   if(ferramenta=="Mão"):
+      pass
+   elif(ferramenta=="Apagar"):
+      pass
+   elif(ferramenta=="Ponto"):
+      pass
+   elif(ferramenta=="Reta"):
+      pass
+   elif(ferramenta=="Círculo"):
+      pass
+   elif(ferramenta=="Letra"):
+      pass
+   elif(ferramenta=="Pencil"):
+      if(len(pilhaGeo)==0):
+         ponto = PontoGr(event.x,event.y, COR_SELETA, ESPESSURA_SELETA)
+         ponto.origem(0, 0)
+         pilhaGeo.append(ponto)
+      else:
+         ponto = PontoGr(event.x,event.y, COR_SELETA, ESPESSURA_SELETA)
+         ponto.origem(0, 0)
+         pilhaGeo.append(ponto)
+         pA = pilhaGeo.pop()
+         pB = pilhaGeo.pop()
+         pC = pA
+         pD = pB
+         reta = RetaGr(int(pA.x), int(pA.y), int(pB.x), int(pB.y), COR_SELETA, ESPESSURA_SELETA)
+         reta.desenhaLine(desenhoQuadro)
+         #pq nao desenha no mapa?
+         reta2 = RetaGr(int(pC.x/3), int(pC.y/3), int(pD.x/3), int(pD.y/3), COR_SELETA, ESPESSURA_SELETA/3)
+         reta2.desenhaLine(desenhoMapa)
+         
+         msg.config(text=str_status+f'Desenhei uma reta! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
+         
+   elif(ferramenta=="Spray"):
+      px = event.x
+      py = event.y
+      ponto1 = PontoGr(px,py, COR_SELETA, ESPESSURA_SELETA)
+      ponto1.origem(-1000, -1000)
+      ponto1.desenhaPonto(desenhoQuadro)
+      ponto2 = PontoGr(px/3, py/3, COR_SELETA, ESPESSURA_SELETA/3)
+      ponto2.origem(-1000, -1000)
+      ponto2.desenhaPonto(desenhoMapa)
+      msg.config(text=str_status+f'Risquei um ponto! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
+      xn = px/desenhoQuadro.winfo_width()
+      yn = py/desenhoQuadro.winfo_height()
+      red =   int(f'{COR_SELETA[1]}{COR_SELETA[2]}',16)
+      green = int(f'{COR_SELETA[3]}{COR_SELETA[4]}',16)
+      blue =  int(f'{COR_SELETA[5]}{COR_SELETA[6]}',16)
+      historico.append(f'<Ponto><x>{xn}</x><y>{yn}</y></Ponto><Cor><R>{red}</R><G>{green}</G><B>{blue}</B></Cor>')
    
 #talvez de pra criar so uma classe dessas funcoes ?
 def cliqueMapa(event):
@@ -285,6 +347,7 @@ def mudouTam(event):
 desenhoQuadro.bind("<Button-1>", cliqueDesenho)
 desenhoQuadro.bind("<Motion>", hoverMapa)
 desenhoQuadro.bind("<Configure>", mudouTam)
+desenhoQuadro.bind("<B1-Motion>", riscoDesenho)
 
 #MAPA
 #declarado antes
@@ -455,5 +518,12 @@ def escolheEspessura():
 espConfig.config(command=escolheEspessura)
 #movido o command pra nao reclamar que escolhe espessura nao existe
 
-   
-janela.mainloop()
+def salvaHistorico():
+   global historico
+   slv = '<?xml version="1.0" encoding="UTF-8" standalone="no"?><Figura>'
+   for linha in historico:
+      slv += linha
+   slv += f'</Figura>'
+   return slv
+
+#janela.mainloop()
