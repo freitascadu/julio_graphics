@@ -49,7 +49,13 @@ class CirculoGr(Circulo, PontoGr):
                 ponto = PontoGr(self._Circulo__centro.x - x, self._Circulo__centro.y + y, self.__cor, self.__esp)
                 ponto.desenhaPonto(jan)
 
-
+    def desenhaCircle(self, canvas):
+        tx=self.centroX-self.raio
+        ty=self.centroY+self.raio
+        ax=self.centroX+self.raio
+        ay=self.centroY-self.raio
+        canvas.create_oval(tx, ty, ax, ay, width=self.__esp, tag='forma', outline=self.cor)
+        
     def desenhaCirculoMidPoint(self, jan):
         if (self._Circulo__raio != 0):
             x = 0
