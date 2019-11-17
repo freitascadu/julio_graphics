@@ -54,7 +54,7 @@ class CirculoGr(Circulo, PontoGr):
         ty=self.centroY+self.raio
         ax=self.centroX+self.raio
         ay=self.centroY-self.raio
-        canvas.create_oval(tx, ty, ax, ay, width=self.__esp, tag='forma', outline=self.cor)
+        canvas.create_oval(tx, ty, ax, ay, width=self.__esp, tag=('forma','Círculo'), outline=self.cor)
         
     def desenhaCirculoMidPoint(self, jan):
         if (self._Circulo__raio != 0):

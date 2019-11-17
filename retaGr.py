@@ -22,7 +22,7 @@ class RetaGr(Reta, PontoGr):
         return self.__esp
 
     def desenhaLine(self, jan):
-        jan.create_line(self._Reta__x1, self._Reta__y1, self._Reta__x2, self._Reta__y2, fill = self.__cor, width = self.__esp, tag='forma', smooth=True)
+        jan.create_line(self._Reta__x1, self._Reta__y1, self._Reta__x2, self._Reta__y2, fill = self.__cor, width = self.__esp, tag=('forma','Reta'), smooth=True)
     
     def desenhaReta(self, jan):
         b = self.calculaB()

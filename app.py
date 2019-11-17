@@ -164,7 +164,10 @@ def toXML(app):
       #nao tem
       #Formato Historico:
       #['ponto','#cor',esp,x,y]
-      str=f'\n<Ponto>\n<x>{app[3]/desenhoQuadro.winfo_width()}</x>\n<y>{app[4]/desenhoQuadro.winfo_height()}</y>\n<Cor>\n<R>{cor[0]}</R>\n<G>{cor[1]}</G>\n<B>{cor[2]}</B>\n</Cor>\n<Espessura>{app[2]}</Espessura>\n</Ponto>\n'
+      str=f'\n<Ponto>\n'
+      str+=f'<x>{app[3]/desenhoQuadro.winfo_width()}</x>\n<y>{app[4]/desenhoQuadro.winfo_height()}</y>\n'
+      str+=f'<Cor>\n<R>{cor[0]}</R>\n<G>{cor[1]}</G>\n<B>{cor[2]}</B>\n</Cor>\n'
+      str+=f'<Espessura>{app[2]}</Espessura>\n</Ponto>\n'
       
    elif(tipo is 'reta'):
       #formato do professor:
@@ -260,6 +263,24 @@ def fazReta(ax, ay, bx, by, cor=COR_SELETA, esp=ESPESSURA_SELETA, seQuadro=True,
    if(seQuadro is True):
       reta = RetaGr(int(ax), int(ay), int(bx), int(by), cor, esp)
       reta.desenhaLine(desenhoQuadro)
+      if(esp >= 4):
+         raioM=esp/2
+         cx=ax-raioM
+         cy=ay+raioM
+         lx=ax+raioM
+         ly=ay-raioM
+         desenhoQuadro.create_oval(cx, cy, lx, ly, tag=('forma','Reta'), outline=cor, fill=cor)
+         raioM=esp/2
+         cx=bx-raioM
+         cy=by+raioM
+         lx=bx+raioM
+         ly=by-raioM
+         desenhoQuadro.create_oval(cx, cy, lx, ly, tag=('forma','Reta'), outline=cor, fill=cor)
+         del raioM
+         del cx
+         del cy
+         del lx
+         del ly
       del reta
    if(seMapa is True):
       #mapeamento
@@ -270,6 +291,24 @@ def fazReta(ax, ay, bx, by, cor=COR_SELETA, esp=ESPESSURA_SELETA, seQuadro=True,
       reta = RetaGr(float(ax)*propX, float(ay)*propY, float(bx)*propX, float(by)*propY, cor, esp*prop)
       reta.desenhaLine(desenhoMapa)
       del reta
+      if(esp >= 4):
+         raioM=esp/2
+         cx=ax-raioM
+         cy=ay+raioM
+         lx=ax+raioM
+         ly=ay-raioM
+         desenhoMapa.create_oval(cx*propX, cy*propY, lx*propX, ly*propY, tag=('forma','Reta'), outline=cor, fill=cor)
+         raioM=esp/2
+         cx=bx-raioM
+         cy=by+raioM
+         lx=bx+raioM
+         ly=by-raioM
+         desenhoMapa.create_oval(cx*propX, cy*propY, lx*propX, ly*propY, tag=('forma','Reta'), outline=cor, fill=cor)
+         del raioM
+         del cx
+         del cy
+         del lx
+         del ly
    if(seHist is True):
       forma = ['reta', cor, esp, ax, ay, bx, by]
       historico.append(forma)
@@ -312,7 +351,7 @@ def fazRetangulo(ax, ay, bx, by, cor=COR_SELETA, esp=ESPESSURA_SELETA, seQuadro=
    global pilhaGeo
    
    if(seQuadro is True):
-      desenhoQuadro.create_polygon(ax, ay, bx, ay, bx, by, ax, by, ax, ay, tag='forma', width=esp, outline=cor, fill='')
+      desenhoQuadro.create_polygon(ax, ay, bx, ay, bx, by, ax, by, ax, ay, tag=('forma','Retângulo'), width=esp, outline=cor, fill='')
    if(seMapa is True):
       #mapeamento
       propY = desenhoMapa.winfo_height()/desenhoQuadro.winfo_height()
@@ -320,7 +359,7 @@ def fazRetangulo(ax, ay, bx, by, cor=COR_SELETA, esp=ESPESSURA_SELETA, seQuadro=
       prop = (propY+propX)/2
       #desenho
       #circulo = CirculoGr(float(cx)*propX, float(cy)*propY, r*prop, cor, esp*prop)
-      desenhoMapa.create_polygon(ax*propX, ay*propY, bx*propX, ay*propY, bx*propX, by*propY, ax*propX, by*propY, ax*propX, ay*propY, tag='forma', width=esp*prop, outline=cor, fill='')
+      desenhoMapa.create_polygon(ax*propX, ay*propY, bx*propX, ay*propY, bx*propX, by*propY, ax*propX, by*propY, ax*propX, ay*propY, tag=('forma','Retângulo'), width=esp*prop, outline=cor, fill='')
    #fazReta(ax, ay, bx, ay, cor, esp, seQuadro, seMapa, False)
    #fazReta(ax, ay, ax, by, cor, esp, seQuadro, seMapa, False)
    #fazReta(ax, by, bx, by, cor, esp, seQuadro, seMapa, False)
@@ -378,18 +417,18 @@ def fazPoligono(ps, cor=COR_SELETA, esp=ESPESSURA_SELETA, seQuadro=True, seMapa=
    global pilhaGeo
    
    if(seQuadro is True):
-      desenhoQuadro.create_polygon(ps, tag='forma', width=esp, outline=cor, fill='')
+      desenhoQuadro.create_polygon(ps, tag=('forma','Poligono'), width=esp, outline=cor, fill='')
    if(seMapa is True):
       #mapeamento
       propY = desenhoMapa.winfo_height()/desenhoQuadro.winfo_height()
       propX = desenhoMapa.winfo_width()/desenhoQuadro.winfo_width()
       prop = (propY+propX)/2
-      print(ps)
+      #print(ps)
       for ponto in ps:
          ponto[0] = ponto[0]*propX
          ponto[1] = ponto[1]*propY
-      print(ps)
-      desenhoMapa.create_polygon(ps, tag='forma', width=esp*prop, outline=cor, fill='')
+      #print(ps)
+      desenhoMapa.create_polygon(ps, tag=('forma','Poligono'), width=esp*prop, outline=cor, fill='')
    if(seHist is True):
       forma = ['poligono', cor, esp, ps]
       historico.append(forma)
@@ -498,7 +537,17 @@ def riscoDesenho(event):
          pilhaGeo.append(ponto)
       else:
          ponto = (event.x,event.y)
+         
          fazReta(ponto[0], ponto[1], pilhaGeo[0][0], pilhaGeo[0][1], COR_SELETA, ESPESSURA_SELETA)
+         '''
+         if(ESPESSURA_SELETA >= 4):
+            raioM=ESPESSURA_SELETA/2
+            tx=ponto[0]-raioM
+            ty=ponto[1]+raioM
+            ax=ponto[0]+raioM
+            ay=ponto[1]-raioM
+            desenhoQuadro.create_oval(tx, ty, ax, ay, tag=('forma','Reta'), outline=COR_SELETA, fill=COR_SELETA)
+         #'''
          pilhaGeo.clear()
          pilhaGeo.append(ponto)
          msg.config(text=str_status+f'Risquei uma linha! Cor: {COR_SELETA} e Espessura:{ESPESSURA_SELETA}')
