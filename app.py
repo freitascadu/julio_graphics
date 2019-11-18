@@ -164,10 +164,11 @@ def toXML(app):
       #nao tem
       #Formato Historico:
       #['ponto','#cor',esp,x,y]
-      str=f'\n<Ponto>\n'
-      str+=f'<x>{app[3]/desenhoQuadro.winfo_width()}</x>\n<y>{app[4]/desenhoQuadro.winfo_height()}</y>\n'
-      str+=f'<Cor>\n<R>{cor[0]}</R>\n<G>{cor[1]}</G>\n<B>{cor[2]}</B>\n</Cor>\n'
-      str+=f'<Espessura>{app[2]}</Espessura>\n</Ponto>\n'
+      str=f'<Ponto>'
+      str+=f'<x>{app[3]/desenhoQuadro.winfo_width()}</x><y>{app[4]/desenhoQuadro.winfo_height()}</y>'
+      str+=f'<Cor><R>{cor[0]}</R><G>{cor[1]}</G><B>{cor[2]}</B></Cor>'
+      #str+=f'<Espessura>{app[2]}</Espessura>\n'
+      str+=f'</Ponto>'
       
    elif(tipo is 'reta'):
       #formato do professor:
@@ -180,12 +181,12 @@ def toXML(app):
       '''
       #Formato Historico:
       #['reta','#cor',esp,x1,y1,x2,y2]
-      str=f'\n<Reta>\n'
-      str+=f'<Ponto><x>{app[3]/desenhoQuadro.winfo_width()}</x><y>{app[4]/desenhoQuadro.winfo_height()}</y></Ponto>\n'
-      str+=f'<Ponto><x>{app[5]/desenhoQuadro.winfo_width()}</x><y>{app[6]/desenhoQuadro.winfo_height()}</y></Ponto>\n'
-      str+=f'<Cor>\n<R>{cor[0]}</R>\n<G>{cor[1]}</G>\n<B>{cor[2]}</B>\n</Cor>\n'
-      str+=f'<Espessura>{app[2]}</Espessura>\n'
-      str+=f'</Reta>\n'
+      str=f'<Reta>'
+      str+=f'<Ponto><x>{app[3]/desenhoQuadro.winfo_width()}</x><y>{app[4]/desenhoQuadro.winfo_height()}</y></Ponto>'
+      str+=f'<Ponto><x>{app[5]/desenhoQuadro.winfo_width()}</x><y>{app[6]/desenhoQuadro.winfo_height()}</y></Ponto>'
+      str+=f'<Cor><R>{cor[0]}</R><G>{cor[1]}</G><B>{cor[2]}</B></Cor>'
+      #str+=f'<Espessura>{app[2]}</Espessura>\n'
+      str+=f'</Reta>'
    elif(tipo is 'circulo'):
       #formato do professor:
       '''
@@ -197,12 +198,12 @@ def toXML(app):
       '''
       #Formato Historico:
       #['circulo','#cor',esp,cx,cy,raio]
-      str=f'\n<Circulo>\n'
-      str+=f'<Ponto><x>{app[3]/desenhoQuadro.winfo_width()}</x><y>{app[4]/desenhoQuadro.winfo_height()}</y></Ponto>\n'
-      str+=f'<Raio>{app[5]/desenhoQuadro.winfo_width()}</Raio>\n'
-      str+=f'<Cor>\n<R>{cor[0]}</R>\n<G>{cor[1]}</G>\n<B>{cor[2]}</B>\n</Cor>\n'
-      str+=f'<Espessura>{app[2]}</Espessura>\n'
-      str+=f'</Circulo>\n'
+      str=f'<Circulo>'
+      str+=f'<Ponto><x>{app[3]/desenhoQuadro.winfo_width()}</x><y>{app[4]/desenhoQuadro.winfo_height()}</y></Ponto>'
+      str+=f'<Raio>{app[5]/desenhoQuadro.winfo_width()}</Raio>'
+      str+=f'<Cor><R>{cor[0]}</R><G>{cor[1]}</G><B>{cor[2]}</B></Cor>'
+      #str+=f'<Espessura>{app[2]}</Espessura>\n'
+      str+=f'</Circulo>'
    elif(tipo is 'retangulo'):
       #formato do professor:
       '''
@@ -214,12 +215,12 @@ def toXML(app):
       '''
       #Formato Historico:
       #['retangulo','#cor',esp,ax,ay,bx,by]
-      str=f'\n<Retangulo>\n'
-      str+=f'<Ponto><x>{app[3]/desenhoQuadro.winfo_width()}</x><y>{app[4]/desenhoQuadro.winfo_height()}</y></Ponto>\n'
-      str+=f'<Ponto><x>{app[5]/desenhoQuadro.winfo_width()}</x><y>{app[6]/desenhoQuadro.winfo_height()}</y></Ponto>\n'
-      str+=f'<Cor>\n<R>{cor[0]}</R>\n<G>{cor[1]}</G>\n<B>{cor[2]}</B>\n</Cor>\n'
-      str+=f'<Espessura>{app[2]}</Espessura>\n'
-      str+=f'</Retangulo>\n'
+      str=f'<Retangulo>'
+      str+=f'<Ponto><x>{app[3]/desenhoQuadro.winfo_width()}</x><y>{app[4]/desenhoQuadro.winfo_height()}</y></Ponto>'
+      str+=f'<Ponto><x>{app[5]/desenhoQuadro.winfo_width()}</x><y>{app[6]/desenhoQuadro.winfo_height()}</y></Ponto>'
+      str+=f'<Cor><R>{cor[0]}</R><G>{cor[1]}</G><B>{cor[2]}</B></Cor>'
+      #str+=f'<Espessura>{app[2]}</Espessura>\n'
+      str+=f'</Retangulo>'
    elif(tipo is 'poligono'):
       #formato do professor
       '''
@@ -232,22 +233,22 @@ def toXML(app):
       '''
       #Formato Historico:
       #['poligono','#cor',esp,ps[]]
-      str=f'\n<Poligono>\n'
+      str=f'<Poligono>'
       for ponto in app[3]:
-         str+=f'<Ponto><x>{ponto[0]/desenhoQuadro.winfo_width()}</x><y>{ponto[1]/desenhoQuadro.winfo_height()}</y></Ponto>\n'
-      str+=f'<Cor>\n<R>{cor[0]}</R>\n<G>{cor[1]}</G>\n<B>{cor[2]}</B>\n</Cor>\n'
-      str+=f'<Espessura>{app[2]}</Espessura>\n'
-      str+=f'</Poligono>\n'
+         str+=f'<Ponto><x>{ponto[0]/desenhoQuadro.winfo_width()}</x><y>{ponto[1]/desenhoQuadro.winfo_height()}</y></Ponto>'
+      str+=f'<Cor><R>{cor[0]}</R><G>{cor[1]}</G><B>{cor[2]}</B></Cor>'
+      #str+=f'<Espessura>{app[2]}</Espessura>\n'
+      str+=f'</Poligono>'
    #print(str)
    return str
 
 def salvarHistoricoXML(xmlArqOut='output.xml'):
    with open(xmlArqOut, 'w') as file:
-      histXml = f'<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<Figura>\n'
+      histXml = f'<?xml version="1.0" encoding="UTF-8" standalone="no"?><Figura>'
       for forma in historico:
          histXml+=toXML(forma)
       #print(histXml)
-      histXml+=f'</Figura>\n'
+      histXml+=f'</Figura>'
       file.write(histXml)
       file.close()
 
@@ -424,11 +425,15 @@ def fazPoligono(ps, cor=COR_SELETA, esp=ESPESSURA_SELETA, seQuadro=True, seMapa=
       propX = desenhoMapa.winfo_width()/desenhoQuadro.winfo_width()
       prop = (propY+propX)/2
       #print(ps)
-      for ponto in ps:
-         ponto[0] = ponto[0]*propX
-         ponto[1] = ponto[1]*propY
+      listaM = []
+      for ponto in ps :
+         pontoM = []
+         pontoM.append(ponto[0]*propX)
+         pontoM.append(ponto[1]*propY)
+         listaM.append(pontoM)
       #print(ps)
-      desenhoMapa.create_polygon(ps, tag=('forma','Poligono'), width=esp*prop, outline=cor, fill='')
+      listaM.append(listaM[0])
+      desenhoMapa.create_polygon(listaM, tag=('forma','Poligono'), width=esp*prop, outline=cor, fill='')
    if(seHist is True):
       forma = ['poligono', cor, esp, ps]
       historico.append(forma)
@@ -763,7 +768,7 @@ def novoQuadro():
    desenhoQuadro.delete("all")
    desenhoMapa.delete("all")
    
-def inputArquivo(nomeArq='output.xml'):
+def inputArquivo(nomeArq='input.xml'):
    global historico
    global COR_SELETA
    global ESPESSURA_SELETA
@@ -1070,4 +1075,4 @@ menuBarra.add_cascade(label="Ajuda", menu=menuAjuda)
 root.config(menu=menuBarra)
 root.bind("<Control-z>",ctrlZ)
 
-#janela.mainloop()
+janela.mainloop()
