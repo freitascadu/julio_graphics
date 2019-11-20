@@ -8,6 +8,8 @@ from circuloGr import *
 from math import *
 from xml.dom.minidom import *
 from xml.dom.minidom import parse
+from tkinter import filedialog
+
 #from xml.etree import ElementTree
 
 STD_ALTURA = 720
@@ -1027,6 +1029,23 @@ def ctrlZ(event=None):
    desenhoMapa.delete("all")
    desenhaHistorico()
 
+def abrirArquivo():
+   global root
+   root.nomeArquivo = filedialog.askopenfilename(initialdir = "/",title = "Selecione arquivo",filetypes = (("arquivos XML","*.xml"),("all files","*.*")))
+   if(root.nomeArquivo is not ''):
+      inputArquivo(root.nomeArquivo)
+   else:
+      print('Erro ao abrir o arquivo')
+      inputArquivo('input.xml')
+   del root.nomeArquivo
+
+def salvarArquivo():
+   global root
+   root.nomeArquivo = 'input.xml'
+   root.nomeArquivo = filedialog.asksaveasfilename(initialdir = "/",title = "Selecione arquivo",filetypes = (("arquivos XML","*.xml"),("all files","*.*")))
+   inputArquivo(root.nomeArquivo)
+   del root.nomeArquivo
+   
 #bogosity
 #X_cursor
 
@@ -1048,7 +1067,7 @@ def sobre():
 menuBarra = Menu(root)
 menuArquivo = Menu(menuBarra, tearoff=0)
 menuArquivo.add_command(label="Novo", command=novoQuadro)
-menuArquivo.add_command(label="Abrir", command=inputArquivo)
+menuArquivo.add_command(label="Abrir", command=abrirArquivo)
 menuArquivo.add_command(label="Salvar", command=salvarHistoricoXML)
 menuArquivo.add_command(label="Salvar como...", command=donothing)
 menuArquivo.add_command(label="Fechar", command=donothing)
